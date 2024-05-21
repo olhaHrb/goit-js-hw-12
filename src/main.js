@@ -17,7 +17,6 @@ btnLoad.addEventListener("click", onBtnLoad)
 async function onFormSubmit(event) {
   event.preventDefault();
   loader.classList.remove('is-hidden');
-  loader.classList.add('is-hidden');
   galleryContainer.innerHTML = "";
 
   searchQuery = event.target.elements.searchInput.value.trim();
@@ -40,7 +39,7 @@ async function onFormSubmit(event) {
     };
 
     // перевірка totalHits
-    
+
 
     renderImageCard(hits);
     btnLoad.classList.remove('is-hidden');
@@ -58,6 +57,8 @@ function onFetchError(error) {
 }
 
 async function onBtnLoad(event) {
+  loader.classList.remove('is-hidden');
+
   pageValue += 1;
   
   try {
@@ -65,7 +66,9 @@ async function onBtnLoad(event) {
     renderImageCard(hits);
   } catch (error) {
     onFetchError(error);
-  }
+  } finally {
+    loader.classList.add('is-hidden');
+  };
 
 }
 
