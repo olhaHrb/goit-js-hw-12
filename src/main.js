@@ -8,6 +8,9 @@ const loader = document.querySelector('.loader');
 const form = document.querySelector(".form");
 const btnLoad = document.querySelector('.btn_load');
 const galleryContainer = document.querySelector(".gallery");
+
+// const galleryLink = document.querySelector('gallery-link');
+// const rect = galleryLink.getBoundingClientRect();
 let searchQuery = "";
 let pageValue = 1;
 let totalRender = 0;
@@ -24,6 +27,7 @@ async function onFormSubmit(event) {
 
   if (searchQuery === "") {
     alert('Enter search query')
+    loader.classList.add('is-hidden');
     return;
   };
   
@@ -75,12 +79,16 @@ async function onBtnLoad(event) {
       iziToast.info({
         message: (`We're sorry, but you've reached the end of search results.`),
       });
+      
     };
   } catch (error) {
     onFetchError(error);
   } finally {
-    loader.classList.add('is-hidden');
+//    loader.classList.add('is-hidden');
   };
+  loader.classList.add('is-hidden');
 };
 
-
+// window.scrollBy({
+//   top: 200,
+// });
