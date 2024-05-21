@@ -10,6 +10,7 @@ const btnLoad = document.querySelector('.btn_load');
 const galleryContainer = document.querySelector(".gallery");
 let searchQuery = "";
 let pageValue = 1;
+let totalRender = 0;
 
 form.addEventListener("submit", onFormSubmit);
 btnLoad.addEventListener("click", onBtnLoad)
@@ -28,6 +29,7 @@ async function onFormSubmit(event) {
   
   try {
     const { hits, totalHits } = await fetchImg(searchQuery, pageValue);
+    totalRender = hits.length;
     
     // перевірка на порожній масив
     if (hits.length === 0) {
@@ -38,11 +40,13 @@ async function onFormSubmit(event) {
       return;
     };
 
-    // перевірка totalHits
-
-
     renderImageCard(hits);
     btnLoad.classList.remove('is-hidden');
+  
+    // перевірка totalHits
+    if (totalRender === totalHits) {
+      btnLoad.classList.add('is-hidden');
+    }
 
   } catch (error) {
     onFetchError(error);
@@ -63,12 +67,20 @@ async function onBtnLoad(event) {
   
   try {
     const { hits, totalHits } = await fetchImg(searchQuery, pageValue);
+    totalRender += hits.length;
     renderImageCard(hits);
+    // перевірка totalHits
+    if (totalRender === totalHits) {
+      btnLoad.classList.add('is-hidden');
+      iziToast.info({
+        message: (`We're sorry, but you've reached the end of search results.`),
+      });
+    };
   } catch (error) {
     onFetchError(error);
   } finally {
     loader.classList.add('is-hidden');
   };
+};
 
-}
 
