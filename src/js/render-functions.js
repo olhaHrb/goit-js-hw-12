@@ -1,7 +1,5 @@
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
-import iziToast from "izitoast";
-import "izitoast/dist/css/iziToast.min.css";
 
 const lightbox = new SimpleLightbox('.gallery a', {
   captionsData: "alt",
@@ -11,15 +9,8 @@ const lightbox = new SimpleLightbox('.gallery a', {
 const galleryContainer = document.querySelector(".gallery");
 
 
-export function renderImageCard(result) {
-  const imgCreate = result.hits;
-  if (imgCreate.length === 0) {
-    galleryContainer.innerHTML="";
-    iziToast.error({
-      message: (`Sorry, there are no images matching your search query. Please try again!`),
-    });
-  } else {
-    const createMarkup = imgCreate.map(({ webformatURL, largeImageURL, tags, likes, views, comments, downloads }) => {
+export function renderImageCard(images) {
+    const markup = images.map(({ webformatURL, largeImageURL, tags, likes, views, comments, downloads }) => {
       return (`
         <li class="gallery-item">
             <a class="gallery-link" href=${largeImageURL}>
@@ -45,7 +36,7 @@ export function renderImageCard(result) {
             </ul>
         </li>`)
     }).join('');
-      galleryContainer.innerHTML = createMarkup;
+      galleryContainer.insertAdjacentHTML('beforeend', markup);
       lightbox.refresh();
-  };
 };
+  

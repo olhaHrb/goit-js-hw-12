@@ -1,60 +1,71 @@
+import iziToast from "izitoast";
+import "izitoast/dist/css/iziToast.min.css";
+
 import { fetchImg } from "./js/pixabay-api"; 
 import { renderImageCard } from "./js/render-functions";
 
 const loader = document.querySelector('.loader');
-const formEach = document.querySelector(".form");
+const form = document.querySelector(".form");
 const btnLoad = document.querySelector('.btn_load');
-let searchValue = "";
-let pageValue;
-export const PAGE = pageValue;
+const galleryContainer = document.querySelector(".gallery");
+let searchQuery = "";
+let pageValue = 1;
 
-formEach.addEventListener("submit", onSearch);
-btnLoad.addEventListener("click", onLoad)
+form.addEventListener("submit", onFormSubmit);
+btnLoad.addEventListener("click", onBtnLoad)
 
-function onSearch(event) {
+async function onFormSubmit(event) {
   event.preventDefault();
   loader.classList.remove('is-hidden');
-  pageValue = 1;
-  const form = event.currentTarget;
-  const searchQuery = form.elements.searchInput.value.trim();
+  loader.classList.add('is-hidden');
+  galleryContainer.innerHTML = "";
 
-  if (searchQuery === "") { 
-    loader.classList.add('is-hidden');
+  searchQuery = event.target.elements.searchInput.value.trim();
+
+  if (searchQuery === "") {
+    alert('Enter search query')
     return;
-  };  
+  };
   
-  searchValue = searchQuery;
+  try {
+    const { hits, totalHits } = await fetchImg(searchQuery, pageValue);
+    
+    // перевірка на порожній масив
+    if (hits.length === 0) {
+      iziToast.error({
+        message: (`Sorry, there are no images matching your search query. Please try again!`),
+      });
+      btnLoad.classList.add('is-hidden');
+      return;
+    };
 
-  fetchImg(searchQuery)
-    .then(image => {
-      renderImageCard(image);
-    }) 
-    .catch (error => {
-      onFetchError(error);
-    })
-    .finally(() => {
-      form.reset();
-      loader.classList.add('is-hidden');
-      btnLoad.classList.remove('is-hidden');
-    });
+    // перевірка totalHits
+    
+
+    renderImageCard(hits);
+    btnLoad.classList.remove('is-hidden');
+
+  } catch (error) {
+    onFetchError(error);
+  } finally {
+    form.reset();
+    loader.classList.add('is-hidden');
+  };
 };
 
 function onFetchError(error) {
   alert(error);
 }
 
-function onLoad(event) {
-  pageValue = pageValue + 1;
-  fetchImg(searchValue)
-    .then(image => {
-      renderImageCard(image);
-    }) 
-    .catch (error => {
-      onFetchError(error);
-    })
-    .finally(() => {
-      
-    });
-};
+async function onBtnLoad(event) {
+  pageValue += 1;
+  
+  try {
+    const { hits, totalHits } = await fetchImg(searchQuery, pageValue);
+    renderImageCard(hits);
+  } catch (error) {
+    onFetchError(error);
+  }
 
+}
 
