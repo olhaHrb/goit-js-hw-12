@@ -8,7 +8,6 @@ const lightbox = new SimpleLightbox('.gallery a', {
 
 const galleryContainer = document.querySelector(".gallery");
 
-
 export function renderImageCard(images) {
     const markup = images.map(({ webformatURL, largeImageURL, tags, likes, views, comments, downloads }) => {
       return (`

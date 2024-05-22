@@ -8,9 +8,6 @@ const loader = document.querySelector('.loader');
 const form = document.querySelector(".form");
 const btnLoad = document.querySelector('.btn_load');
 const galleryContainer = document.querySelector(".gallery");
-
-// const galleryLink = document.querySelector('gallery-link');
-// const rect = galleryLink.getBoundingClientRect();
 let searchQuery = "";
 let pageValue = 1;
 let totalRender = 0;
@@ -73,6 +70,12 @@ async function onBtnLoad(event) {
     const { hits, totalHits } = await fetchImg(searchQuery, pageValue);
     totalRender += hits.length;
     renderImageCard(hits);
+    // const galleryLink = document.querySelector('gallery-link');
+    // const rect = galleryLink.getBoundingClientRect();
+    window.scrollBy({
+      //top: rect.height,
+      top: 400,
+    });
     // перевірка totalHits
     if (totalRender === totalHits) {
       btnLoad.classList.add('is-hidden');
@@ -89,6 +92,4 @@ async function onBtnLoad(event) {
   loader.classList.add('is-hidden');
 };
 
-// window.scrollBy({
-//   top: 200,
-// });
+
