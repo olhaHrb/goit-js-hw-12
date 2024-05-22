@@ -23,11 +23,15 @@ async function onFormSubmit(event) {
   searchQuery = event.target.elements.searchInput.value.trim();
 
   if (searchQuery === "") {
-    alert('Enter search query')
+    iziToast.info({
+        message: (`Enter search query.`),
+      });
     loader.classList.add('is-hidden');
+    btnLoad.classList.add('is-hidden');
     return;
   };
   
+  pageValue = 1;
   try {
     const { hits, totalHits } = await fetchImg(searchQuery, pageValue);
     totalRender = hits.length;
