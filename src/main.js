@@ -70,11 +70,11 @@ async function onBtnLoad(event) {
     const { hits, totalHits } = await fetchImg(searchQuery, pageValue);
     totalRender += hits.length;
     renderImageCard(hits);
-    // const galleryLink = document.querySelector('gallery-link');
-    // const rect = galleryLink.getBoundingClientRect();
+    const galleryItem = document.querySelector('.gallery-item');
+    const rect = galleryItem.getBoundingClientRect();
     window.scrollBy({
-      //top: rect.height,
-      top: 400,
+      top: rect.height * 2,
+      behavior: "smooth",
     });
     // перевірка totalHits
     if (totalRender === totalHits) {
@@ -86,10 +86,8 @@ async function onBtnLoad(event) {
     };
   } catch (error) {
     onFetchError(error);
-  } finally {
-//    loader.classList.add('is-hidden');
-  };
-  loader.classList.add('is-hidden');
+  }
+    loader.classList.add('is-hidden');
 };
 
 
